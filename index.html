@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UK Work Permit Process Flow</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🇬🇧 UK Work Permit Process</h1>
+                <p>Complete End-to-End Application Flow</p>
+            </div>
+        </header>
+
+        <!-- Progress Indicator -->
+        <div class="progress-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-steps">
+                <div class="step-indicator" id="stepIndicator"></div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Initiation Stage -->
+            <div class="stage" id="stage-initiation" data-stage="initiation">
+                <div class="stage-header">
+                    <span class="stage-number">1</span>
+                    <h2>Application Initiation</h2>
+                </div>
+                <div class="stage-content">
+                    <p>Start your UK work permit application journey</p>
+                    <form id="initiationForm" class="form">
+                        <div class="form-group">
+                            <label for="applicantName">Full Name:</label>
+                            <input type="text" id="applicantName" name="applicantName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="jobTitle">Job Title:</label>
+                            <input type="text" id="jobTitle" name="jobTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Employer Name:</label>
+                            <input type="text" id="company" name="company" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nationality">Nationality:</label>
+                            <input type="text" id="nationality" name="nationality" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Proceed to Eligibility Check</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Eligibility Check Stage -->
+            <div class="stage" id="stage-eligibility" data-stage="eligibility" style="display:none;">
+                <div class="stage-header">
+                    <span class="stage-number">2</span>
+                    <h2>Eligibility Check</h2>
+                </div>
+                <div class="stage-content">
+                    <p>Verify your eligibility for UK work permit</p>
+                    <div class="eligibility-checklist">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="passportValid" name="passportValid">
+                            <label for="passportValid">Valid passport (minimum 6 months validity)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="noViolations" name="noViolations">
+                            <label for="noViolations">No criminal convictions or immigration violations</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="qualifications" name="qualifications">
+                            <label for="qualifications">Relevant qualifications/experience for role</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="englishLevel" name="englishLevel">
+                            <label for="englishLevel">English language proficiency (B1+ level)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="sponsorLicense" name="sponsorLicense">
+                            <label for="sponsorLicense">Employer has valid sponsorship license</label>
+                        </div>
+                    </div>
+                    <div id="eligibilityStatus" class="status-box"></div>
+                    <button type="button" class="btn btn-primary" id="eligibilityBtn" onclick="checkEligibility()">Check Eligibility</button>
+                </div>
+            </div>
+
+            <!-- Salary Check Stage -->
+            <div class="stage" id="stage-salary" data-stage="salary" style="display:none;">
+                <div class="stage-header">
+                    <span class="stage-number">3</span>
+                    <h2>Salary Verification</h2>
+                </div>
+                <div class="stage-content">
+                    <p>Verify salary meets UK work permit minimum thresholds</p>
+                    <form id="salaryForm" class="form">
+                        <div class="form-group">
+                            <label for="annualSalary">Annual Salary (£):</label>
+                            <input type="number" id="annualSalary" name="annualSalary" required>
+                            <small>Minimum threshold: £26,200 (or £20,960 for sponsored workers)</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="salaryProof">Upload Salary Evidence:</label>
+                            <input type="file" id="salaryProof" name="salaryProof" accept=".pdf,.doc,.docx" required>
+                            <small>Accepted: Employment letter, offer letter, or payslips</small>
+                        </div>
+                        <div id="salaryStatus" class="status-box"></div>
+                        <button type="button" class="btn btn-primary" onclick="verifySalary()">Verify Salary</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sponsorship & Cost Stage -->
+            <div class="stage" id="stage-sponsorship" data-stage="sponsorship" style="display:none;">
+                <div class="stage-header">
+                    <span class="stage-number">4</span>
+                    <h2>Sponsorship & Costs</h2>
+                </div>
+                <div class="stage-content">
+                    <p>Review sponsorship details and associated costs</p>
+                    <div class="sponsorship-details">
+                        <div class="detail-box">
+                            <h3>Application Fees</h3>
+                            <table class="costs-table">
+                                <tr>
+                                    <td>Visa Application Fee:</td>
+                                    <td>£719</td>
+                                </tr>
+                                <tr>
+                                    <td>Immigration Health Surcharge:</td>
+                                    <td>£1,035/year</td>
+                                </tr>
+                                <tr>
+                                    <td>Sponsor Levy (if applicable):</td>
+                                    <td>£199/quarter</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td><strong>Estimated Total:</strong></td>
+                                    <td><strong>£1,953+</strong></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="detail-box">
+                            <h3>Employer Sponsorship</h3>
+                            <form id="sponsorshipForm" class="form">
+                                <div class="form-group">
+                                    <label for="sponsorName">Sponsor Organisation Name:</label>
+                                    <input type="text" id="sponsorName" name="sponsorName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sponsorLicenseNo">Sponsor License Number:</label>
+                                    <input type="text" id="sponsorLicenseNo" name="sponsorLicenseNo" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="payingParty">Who pays the fees?</label>
+                                    <select id="payingParty" name="payingParty" required>
+                                        <option value="">Select...</option>
+                                        <option value="employer">Employer</option>
+                                        <option value="applicant">Applicant</option>
+                                        <option value="shared">Shared</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Confirm Sponsorship</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deputation Letter Stage -->
+            <div class="stage" id="stage-deputation" data-stage="deputation" style="display:none;">
+                <div class="stage-header">
+                    <span class="stage-number">5</span>
+                    <h2>Deputation Letter</h2>
+                </div>
+                <div class="stage-content">
+                    <p>Submit deputation/assignment letter from employer</p>
+                    <div class="info-box">
+                        <h3>Required Information in Letter:</h3>
+                        <ul>
+                            <li>Employee name and position</li>
+                            <li>UK job title and responsibilities</li>
+                            <li>Duration of assignment</li>
+                            <li>Salary and benefits</li>
+                            <li>Reporting structure</li>
+                            <li>Authorized signatory with company stamp</li>
+                        </ul>
+                    </div>
+                    <form id="deputationForm" class="form">
+                        <div class="form-group">
+                            <label for="deputationLetter">Upload Deputation Letter (PDF):</label>
+                            <input type="file" id="deputationLetter" name="deputationLetter" accept=".pdf" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignmentDuration">Assignment Duration (months):</label>
+                            <input type="number" id="assignmentDuration" name="assignmentDuration" min="1" max="36" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="deputationConfirm" name="deputationConfirm" required>
+                            <label for="deputationConfirm">I confirm the deputation letter is authentic and accurate</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Deputation Letter</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Immigration Team Review Stage -->
+            <div class="stage" id="stage-review" data-stage="review" style="display:none;">
+                <div class="stage-header">
+                    <span class="stage-number">6</span>
+                    <h2>Immigration Team Review</h2>
+                </div>
+                <div class="stage-content">
+                    <p>UKVI immigration team reviews your application</p>
+                    <div class="review-timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker completed"></div>
+                            <div class="timeline-content">
+                                <h4>Document Verification</h4>
+                                <p>All submitted documents are being verified</p>
+                                <span class="status-badge status-completed">Completed</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker in-progress"></div>
+                            <div class="timeline-content">
+                                <h4>Background Check</h4>
+                                <p>Security and background verification in progress</p>
+                                <span class="status-badge status-in-progress">In Progress</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker pending"></div>
+                            <div class="timeline-content">
+                                <h4>Sponsor Verification</h4>
+                                <p>Verifying employer sponsorship details</p>
+                                <span class="status-badge status-pending">Pending</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker pending"></div>
+                            <div class="timeline-content">
+                                <h4>Final Decision</h4>
+                                <p>Awaiting final approval decision</p>
+                                <span class="status-badge status-pending">Pending</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <p><strong>Expected Processing Time:</strong> 8 weeks (standard) or 2-4 weeks (priority)</p>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="simulateApproval()">Simulate Approval (Demo)</button>
+                </div>
+            </div>
+
+            <!-- Certificate of Sponsorship Stage -->
+            <div class="stage" id="stage-cos" data-stage="cos" style="display:none;">
+                <div class="stage-header">
+                    <span class="stage-number">7</span>
+                    <h2>Certificate of Sponsorship (CoS)</h2>
+                </div>
+                <div class="stage-content">
+                    <p>Receive and review your Certificate of Sponsorship</p>
+                    <div class="certificate-box">
+                        <div class="certificate-preview">
+                            <h3>🎖️ Certificate of Sponsorship</h3>
+                            <p><strong>CoS Number:</strong> <span id="cosNumber">CS-2026-001234</span></p>
+                            <p><strong>Applicant:</strong> <span id="cosApplicant">John Doe</span></p>
+                            <p><strong>Sponsor:</strong> <span id="cosSponsor">ABC Company Ltd</span></p>
+                            <p><strong>Job Title:</strong> <span id="cosJob">Senior Software Engineer</span></p>
+                            <p><strong>Validity Period:</strong> 90 days</p>
+                            <p><strong>Issue Date:</strong> <span id="cosIssueDate">03 September 2026</span></p>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <h3>Next Steps:</h3>
+                        <ol>
+                            <li>Print or download your Certificate of Sponsorship</li>
+                            <li>Use it for your visa application</li>
+                            <li>You must use it within 90 days of issue</li>
+                            <li>Proceed to visa filing</li>
+                        </ol>
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="downloadCOS()">Download Certificate</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStage('visa')">Proceed to Visa Filing</button>
+                </div>
+            </div>
+
+            <!-- Visa Filing Stage -->
+            <div class="stage" id="stage-visa" data-stage="visa" style="display:none;">
+                <div class="stage-header">
+                    <span class="stage-number">8</span>
+                    <h2>Visa Filing & Application</h2>
+                </div>
+                <div class="stage-content">
+                    <p>Submit your visa application online</p>
+                    <form id="visaForm" class="form">
+                        <div class="form-group">
+                            <label for="passportNumber">Passport Number:</label>
+                            <input type="text" id="passportNumber" name="passportNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="visaType">Visa Type:</label>
+                            <select id="visaType" name="visaType" required>
+                                <option value="">Select...</option>
+                                <option value="skilled-worker">Skilled Worker Visa</option>
+                                <option value="intra-company">Intra-Company Transfer</option>
+                                <option value="graduate">Graduate Visa</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="appointmentDate">Visa Appointment Date:</label>
+                            <input type="date" id="appointmentDate" name="appointmentDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="visaCentre">Visa Application Centre:</label>
+                            <input type="text" id="visaCentre" name="visaCentre" placeholder="e.g., London, New Delhi, Sydney" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="visaConfirm" name="visaConfirm" required>
+                            <label for="visaConfirm">I confirm all information is accurate and complete</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Visa Application</button>
+                    </form>
+                    <div id="visaStatus" class="status-box"></div>
+                </div>
+            </div>
+
+            <!-- Travel Stage -->
+            <div class="stage" id="stage-travel" data-stage="travel" style="display:none;">
+                <div class="stage-header">
+                    <span class="stage-number">9</span>
+                    <h2>Travel to UK</h2>
+                </div>
+                <div class="stage-content">
+                    <p>Prepare for your travel to the United Kingdom</p>
+                    <div class="travel-checklist">
+                        <h3>Pre-Travel Checklist:</h3>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="visaStamp" name="visaStamp">
+                            <label for="visaStamp">Visa stamp/e-visa in passport</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="returnTicket" name="returnTicket">
+                            <label for="returnTicket">Return flight ticket booked</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="accommodation" name="accommodation">
+                            <label for="accommodation">Accommodation arranged (first few weeks)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="bankStatement" name="bankStatement">
+                            <label for="bankStatement">Bank statements showing funds</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="healthInsurance" name="healthInsurance">
+                            <label for="healthInsurance">Health insurance arranged</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="nino" name="nino">
+                            <label for="nino">National Insurance Number (NI) application prepared</label>
+                        </div>
+                    </div>
+                    <form id="travelForm" class="form">
+                        <div class="form-group">
+                            <label for="arrivalDate">Expected UK Arrival Date:</label>
+                            <input type="date" id="arrivalDate" name="arrivalDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ukAddress">UK Residential Address:</label>
+                            <textarea id="ukAddress" name="ukAddress" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Confirm Travel Details</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Onboarding Stage -->
+            <div class="stage" id="stage-onboarding" data-stage="onboarding" style="display:none;">
+                <div class="stage-header">
+                    <span class="stage-number">10</span>
+                    <h2>UK Onboarding</h2>
+                </div>
+                <div class="stage-content">
+                    <p>Complete onboarding procedures in the UK</p>
+                    <div class="onboarding-tasks">
+                        <div class="task-card">
+                            <h3>🏛️ Home Office Registration</h3>
+                            <p>Report to local police station within 7 days of arrival (if required)</p>
+                            <input type="checkbox" id="policeReport" name="policeReport">
+                            <label for="policeReport">Completed</label>
+                        </div>
+                        <div class="task-card">
+                            <h3>🆔 National Insurance Number</h3>
+                            <p>Apply for or collect your NI number from local office</p>
+                            <input type="checkbox" id="niNumber" name="niNumber">
+                            <label for="niNumber">Completed</label>
+                        </div>
+                        <div class="task-card">
+                            <h3>🏦 Bank Account</h3>
+                            <p>Open a UK bank account (bring passport and visa)</p>
+                            <input type="checkbox" id="bankAccount" name="bankAccount">
+                            <label for="bankAccount">Completed</label>
+                        </div>
+                        <div class="task-card">
+                            <h3>🏠 Accommodation</h3>
+                            <p>Confirm permanent UK residence address</p>
+                            <input type="checkbox" id="permanentAddress" name="permanentAddress">
+                            <label for="permanentAddress">Completed</label>
+                        </div>
+                        <div class="task-card">
+                            <h3>🏥 NHS Registration</h3>
+                            <p>Register with a local GP for healthcare</p>
+                            <input type="checkbox" id="nhsRegistration" name="nhsRegistration">
+                            <label for="nhsRegistration">Completed</label>
+                        </div>
+                        <div class="task-card">
+                            <h3>💼 Employer Onboarding</h3>
+                            <p>Complete company onboarding and training</p>
+                            <input type="checkbox" id="employerOnboarding" name="employerOnboarding">
+                            <label for="employerOnboarding">Completed</label>
+                        </div>
+                    </div>
+                    <form id="onboardingForm" class="form">
+                        <div class="form-group">
+                            <label for="startDate">Employment Start Date:</label>
+                            <input type="date" id="startDate" name="startDate" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Confirm Onboarding Complete</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right to Work Check Stage -->
+            <div class="stage" id="stage-rtw" data-stage="rtw" style="display:none;">
+                <div class="stage-header">
+                    <span class="stage-number">11</span>
+                    <h2>Right to Work (RTW) Check</h2>
+                </div>
+                <div class="stage-content">
+                    <p>Final right to work verification and employment commencement</p>
+                    <div class="rtw-verification">
+                        <div class="info-box">
+                            <h3>RTW Check Overview:</h3>
+                            <p>Your employer will verify your right to work in the UK using the Home Office's Right to Work verification service.</p>
+                        </div>
+                        <form id="rtwForm" class="form">
+                            <div class="form-group">
+                                <label for="ninoProvided">National Insurance Number:</label>
+                                <input type="text" id="ninoProvided" name="ninoProvided" placeholder="e.g., AB 12 34 56 C" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="dob">Date of Birth:</label>
+                                <input type="date" id="dob" name="dob" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" id="rtwConfirm" name="rtwConfirm" required>
+                                <label for="rtwConfirm">I confirm my right to work documentation has been provided to my employer</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Verify Right to Work</button>
+                        </form>
+                        <div id="rtwStatus" class="status-box"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completion Stage -->
+            <div class="stage" id="stage-completion" data-stage="completion" style="display:none;">
+                <div class="stage-header">
+                    <span class="stage-number">✓</span>
+                    <h2>Application Complete</h2>
+                </div>
+                <div class="stage-content completion-content">
+                    <div class="success-message">
+                        <h2>🎉 Congratulations!</h2>
+                        <p>Your UK work permit application has been successfully completed.</p>
+                    </div>
+                    <div class="summary-box">
+                        <h3>Application Summary:</h3>
+                        <div id="completionSummary" class="summary-details"></div>
+                    </div>
+                    <div class="info-box">
+                        <h3>Important Reminders:</h3>
+                        <ul>
+                            <li>Keep your visa documentation safe and carry it at all times</li>
+                            <li>Inform UKVI of any changes to your circumstances</li>
+                            <li>Renew your visa 90 days before expiry</li>
+                            <li>Maintain compliance with visa conditions</li>
+                            <li>Update your employer if you change your role or location</li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="downloadReport()">Download Full Report</button>
+                    <button type="button" class="btn btn-primary" onclick="startNew()">Start New Application</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <button type="button" class="btn btn-outline" id="prevBtn" onclick="previousStage()" style="display:none;">← Previous</button>
+            <button type="button" class="btn btn-outline" id="nextBtn" onclick="nextStage()" style="display:none;">Next →</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
